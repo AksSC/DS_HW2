@@ -12,7 +12,7 @@ echo "--- Starting K-Means Data Generation ---"
 # Ensure python is available (uncomment if you have modules)
 module load python/3.12.5
 
-source "$HOME/DS_HW2/kmeans_env/bin/activate"
+source "$HOME/kmeans_env/bin/activate"
 
 python3 generate_script.py
 
