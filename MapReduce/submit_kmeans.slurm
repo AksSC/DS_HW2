@@ -10,7 +10,7 @@
 # --- Load any necessary modules (if required on your cluster) ---
 # module load python/3.8
 
-if [ "$#" -ne 4 ]; then
+if [ "$#" -ne 2 ]; then
     echo "Error: Incorrect number of arguments."
     echo "Usage: sbatch submit_kmeans.slurm <K> <max_iterations>"
     exit 1
