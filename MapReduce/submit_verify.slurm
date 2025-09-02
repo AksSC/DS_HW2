@@ -17,5 +17,3 @@ source "$HOME/DS_HW2/kmeans_env/bin/activate
 # Run the verification script with the correct file paths
 # Make sure these paths are correct for your directory structure
 python3 verify_script.py data/expected_centers.csv output/centroids_20.txt data/expected_assignments.csv output/assignments.txt
-
-echo "--- Verification Complete ---"
