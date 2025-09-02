@@ -7,6 +7,9 @@ if [ "$#" -ne 4 ]; then
     exit 1
 fi
 
+chmod +x submit_generate.slurm submit_kmeans.slurm submit_verify.slurm
+chmod +x generate_and_test.py run_mapreduce_parallel.sh mapper.py reducer.py verify_output.py
+
 # Assign arguments to named variables for clarity
 NUM_POINTS=$1
 NUM_DIMS=$2
