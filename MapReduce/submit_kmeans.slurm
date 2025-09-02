@@ -15,4 +15,4 @@ chmod +x run_mapreduce.sh mapper.py reducer.py
 
 # --- Run the main driver script ---
 # Example values, replace with your actual files and parameters
-./run_mapreduce.sh 2 data/points.csv data/initial_centers.csv 50 output
+./run_mapreduce.sh 15 data/points.csv data/initial_centers.csv 50 output

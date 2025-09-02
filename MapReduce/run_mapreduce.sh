@@ -65,7 +65,8 @@ fi
 # --- Final Output Generation ---
 # The final centroids are the ones from the last successful iteration.
 FINAL_CENTROIDS="$OUTPUT_DIR/centroids_$i.txt"
-echo "Final centroids written to $FINAL_CENTROIDS"
+cp "$FINAL_CENTROIDS" "$OUTPUT_DIR/centroids_final.txt"
+echo "Final centroids written to $OUTPUT_DIR/centroids_final.txt"
 
 # Create the final point-to-cluster assignment file [cite: 128]
 echo "Generating final cluster assignments..."
