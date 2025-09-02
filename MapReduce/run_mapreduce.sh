@@ -72,4 +72,6 @@ echo "Generating final cluster assignments..."
 ASSIGNMENT_FILE="$OUTPUT_DIR/assignments.txt"
 cat $POINTS_FILE | python3 mapper.py $FINAL_CENTROIDS > $ASSIGNMENT_FILE
 
-echo "K-Means finished. Final output is in $OUTPUT_DIR"
+echo "K-Means finished. Final assignment is in $ASSIGNMENT_FILE"
+
+rm -rf "$OUTPUT_DIR/tmp"
