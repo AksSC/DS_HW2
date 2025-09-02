@@ -10,13 +10,14 @@ chmod +x generate_script.py run_mapreduce.sh mapper.py reducer.py verify_script.
 
 # Parameters for the single, large dataset we will use for all tests.
 NUM_POINTS=500000
-NUM_DIMS=10
+NUM_DIMS=5
 K=50
-MAX_ITER=100
+MAX_ITER=200
 
 # Output file for raw timing data.
 JOB_IDS_FILE="job_ids.csv"
 
+# Can further remove this from here, just do sbatch outside and then once generation is done, run this script, to avoid waiting like this tch tch
 # --- Step 1: Generate the Benchmark Dataset (only once) ---
 echo "--- Submitting Data Generation Job ---"
 # We wait for this job to complete before starting the tests.
