@@ -2,7 +2,7 @@
 
 # --- Argument Parsing ---
 if [ "$#" -ne 5 ]; then
-    echo "Usage: ./run_mapreduce_parallel.sh K points.csv centers.txt max_iter output_dir"
+    echo "Usage: ./run_mapreduce.sh K points.csv centers.txt max_iter output_dir"
     exit 1
 fi
 

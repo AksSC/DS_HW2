@@ -30,13 +30,13 @@ echo "-> Generation Job ID: $GENERATE_JOB_ID"
 # --- Step 2: Submit the K-Means Job with a Dependency ---
 # This job will only start after the generation job (ID: $GENERATE_JOB_ID) completes successfully.
 echo "Submitting K-Means job (will wait for generation to finish)..."
-KMEANS_JOB_ID=$(sbatch --parsable --dependency=afterok:$GENERATE_JOB_ID submit_kmeans.slurm "$K" "$MAX_ITER")
+KMEANS_JOB_ID=$(sbatch --parsable --dependency=afterok:$GENERATE_JOB_ID submit_kmeans.slurm "$K" "$MAX_ITER" "output")
 echo "-> K-Means Job ID: $KMEANS_JOB_ID"
 
 # --- Step 3: Submit the Verification Job with a Dependency ---
 # This job will only start after the K-Means job (ID: $KMEANS_JOB_ID) completes successfully.
 echo "Submitting verification job (will wait for K-Means to finish)..."
-VERIFY_JOB_ID=$(sbatch --parsable --dependency=afterok:$KMEANS_JOB_ID submit_verify.slurm)
+VERIFY_JOB_ID=$(sbatch --parsable --dependency=afterok:$KMEANS_JOB_ID submit_verify.slurm "output")
 echo "-> Verification Job ID: $VERIFY_JOB_ID"
 
 echo "------------------------------------------"
