@@ -9,7 +9,7 @@ chmod +x submit_generate.slurm submit_kmeans.slurm submit_verify.slurm
 chmod +x generate_script.py run_mapreduce.sh mapper.py reducer.py verify_script.py
 
 # Parameters for the single, large dataset we will use for all tests.
-NUM_POINTS=100000
+NUM_POINTS=500000
 NUM_DIMS=5
 K=50
 MAX_ITER=100
