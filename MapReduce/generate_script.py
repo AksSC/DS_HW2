@@ -1,16 +1,18 @@
 import numpy as np
 import csv
 import random
+import os
+import sys
 
 # --- Configuration ---
-# Feel free to change these parameters to test different scenarios
-NUM_POINTS = 10000  # Number of data points to generate
-NUM_DIMENSIONS = 3    # Number of dimensions for each point
-K = 15                # Number of clusters
-MAX_ITERATIONS = 50   # Max iterations for the naive K-Means
+# NUM_POINTS = 10000  # Number of data points to generate
+# NUM_DIMENSIONS = 3    # Number of dimensions for each point
+# K = 15                # Number of clusters
+# MAX_ITERATIONS = 50   # Max iterations for the naive K-Means
 CLUSTER_STD_DEV = 2.5 # Standard deviation for clusters (how spread out they are)
 
 # --- File Names ---
+os.makedirs('data', exist_ok=True)
 POINTS_FILE = 'data/points.csv'
 INITIAL_CENTERS_FILE = 'data/initial_centers.csv'
 EXPECTED_CENTERS_FILE = 'data/expected_centers.csv'
@@ -85,6 +87,15 @@ def main():
     """
     Main function to generate data, run naive K-Means, and write all files.
     """
+    if len(sys.argv) != 5:
+        print("Usage: python3 generate_script.py <num_points> <num_dimensions> <K> <max_iterations>")
+        sys.exit(1)
+
+    NUM_POINTS = int(sys.argv[1])
+    NUM_DIMENSIONS = int(sys.argv[2])
+    K = int(sys.argv[3])
+    MAX_ITERATIONS = int(sys.argv[4])
+
     # --- 1. Generate Data and Initial Centers ---
     points = generate_clustered_data(NUM_POINTS, NUM_DIMENSIONS, K, CLUSTER_STD_DEV)
     

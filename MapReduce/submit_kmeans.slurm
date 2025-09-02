@@ -10,9 +10,22 @@
 # --- Load any necessary modules (if required on your cluster) ---
 # module load python/3.8
 
-# --- Ensure scripts are executable ---
-chmod +x run_mapreduce.sh mapper.py reducer.py
+if [ "$#" -ne 4 ]; then
+    echo "Error: Incorrect number of arguments."
+    echo "Usage: sbatch submit_kmeans.slurm <K> <max_iterations>"
+    exit 1
+fi
+
+echo "--- Starting K-Means MapReduce Job ---"
+echo "K: $1"
+echo "Max Iterations: $2"
+
+# Environment setup
+module load python/3.12.5
+source "$HOME/kmeans_env/bin/activate"
 
 # --- Run the main driver script ---
 # Example values, replace with your actual files and parameters
-./run_mapreduce.sh 15 data/points.csv data/initial_centers.csv 50 output
+./run_mapreduce.sh "$1" data/points.csv data/initial_centers.csv "$2" "output"
+
+echo "--- K-Means MapReduce Job Complete ---"
