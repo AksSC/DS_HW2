@@ -8,7 +8,7 @@ if [ "$#" -ne 4 ]; then
 fi
 
 chmod +x submit_generate.slurm submit_kmeans.slurm submit_verify.slurm
-chmod +x generate_script.py run_mapreduce.sh mapper.py reducer.py verify_script.py
+chmod +x generate_script.py run_mapreduce.sh mapper.py reducer.py verify_script.py combiner.py
 
 # Assign arguments to named variables for clarity
 NUM_POINTS=$1

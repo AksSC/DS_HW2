@@ -11,7 +11,7 @@ fi
 CORE_COUNTS=(1 2 4 8 16 24 32 48 64 96)
 
 chmod +x submit_generate.slurm submit_kmeans.slurm submit_verify.slurm
-chmod +x run_mapreduce.sh mapper.py reducer.py verify_script.py
+chmod +x run_mapreduce.sh mapper.py reducer.py verify_script.py combiner.py
 
 # Parameters for the single, large dataset we will use for all tests.
 K=$1
@@ -53,8 +53,8 @@ for cores in "${CORE_COUNTS[@]}"; do
     
     echo "   KMeans Job ID: $JOB_ID"
 
-    VERIFY_JOB_ID=$(sbatch --parsable --dependency=afterok:"$JOB_ID" submit_verify.slurm "$OUTPUT_DIR")
-    echo "   Verification Job ID: $VERIFY_JOB_ID (depends on $JOB_ID)"
+    # VERIFY_JOB_ID=$(sbatch --parsable --dependency=afterok:"$JOB_ID" submit_verify.slurm "$OUTPUT_DIR")
+    # echo "   Verification Job ID: $VERIFY_JOB_ID (depends on $JOB_ID)"
 
     # Save the job IDs to our CSV file
     echo "$cores,$JOB_ID" >> "$JOB_IDS_FILE"
