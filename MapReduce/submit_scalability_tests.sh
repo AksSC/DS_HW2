@@ -9,21 +9,26 @@ chmod +x submit_generate.slurm submit_kmeans.slurm submit_verify.slurm
 chmod +x generate_script.py run_mapreduce.sh mapper.py reducer.py verify_script.py
 
 # Parameters for the single, large dataset we will use for all tests.
-NUM_POINTS=500000
-NUM_DIMS=5
 K=50
-MAX_ITER=100
+MAX_ITER=200
 
 # Output file for raw timing data.
 JOB_IDS_FILE="job_ids.csv"
 
+# If no data folder, throw error and ask to generate data first
+if [ ! -d "data" ]; then
+    echo "Error: Data folder 'data' does not exist."
+    echo "Please run the data generation script first."
+    exit 1
+fi
+
 # Can further remove this from here, just do sbatch outside and then once generation is done, run this script, to avoid waiting like this tch tch
 # --- Step 1: Generate the Benchmark Dataset (only once) ---
-echo "--- Submitting Data Generation Job ---"
-# We wait for this job to complete before starting the tests.
-sbatch --wait submit_generate.slurm "$NUM_POINTS" "$NUM_DIMS" "$K" "$MAX_ITER"
-echo "-> Data generation complete."
-echo "------------------------------------------"
+# echo "--- Submitting Data Generation Job ---"
+# # We wait for this job to complete before starting the tests.
+# sbatch --wait submit_generate.slurm "$NUM_POINTS" "$NUM_DIMS" "$K" "$MAX_ITER"
+# echo "-> Data generation complete."
+# echo "------------------------------------------"
 
 
 # --- Step 2: Run K-Means for each core count and record time ---
