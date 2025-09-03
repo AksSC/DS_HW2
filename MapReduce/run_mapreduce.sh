@@ -32,23 +32,19 @@ do
     PREV_CENTROIDS="$OUTPUT_DIR/centroids_$(($i-1)).txt"
     NEW_CENTROIDS="$OUTPUT_DIR/centroids_$i.txt"
     
-    # --- Parallel Map Step ---
-    # srun launches NUM_MAPPERS instances of the command.
-    # SLURM_PROCID gives each task a unique ID from 0 to NUM_MAPPERS-1.
-    # Each mapper reads its own chunk and writes to its own output file.
+    # --- Parallel Map -> Combine Step ---
+    # Each task now runs a full Map -> Sort -> Combine pipeline locally.
     srun --ntasks=$NUM_MAPPERS bash -c '
         TASK_ID=$(printf "%02d" $SLURM_PROCID)
         INPUT_CHUNK="$1/tmp/chunk_${TASK_ID}.txt"
-        MAP_OUTPUT="$1/tmp/map_out_${TASK_ID}.txt"
-        python3 mapper.py "$2" < "$INPUT_CHUNK" > "$MAP_OUTPUT"
+        COMBINED_OUTPUT="$1/tmp/combined_out_${TASK_ID}.txt"
+        python3 mapper.py "$2" < "$INPUT_CHUNK" | sort -k1,1n | python3 combiner.py > "$COMBINED_OUTPUT"
     ' bash "$OUTPUT_DIR" "$PREV_CENTROIDS" # Pass arguments to the bash -c command
 
     # --- Aggregate, Sort, and Reduce Step ---
     # Consolidate all mapper outputs
-    cat "$OUTPUT_DIR/tmp/map_out_"*.txt > "$OUTPUT_DIR/tmp/combined_map_out.txt"
-    
-    # Sort the combined output (Shuffle & Sort) and pipe to the reducer
-    sort -k1,1n "$OUTPUT_DIR/tmp/combined_map_out.txt" | python3 reducer.py "$PREV_CENTROIDS" > "$NEW_CENTROIDS"
+    cat "$OUTPUT_DIR/tmp/combined_out_"*.txt > "$OUTPUT_DIR/tmp/global_combined_out.txt"
+    sort -k1,1n "$OUTPUT_DIR/tmp/global_combined_out.txt" | python3 reducer.py "$PREV_CENTROIDS" > "$NEW_CENTROIDS"
 
     # --- Convergence Check ---
     if diff -q "$PREV_CENTROIDS" "$NEW_CENTROIDS" > /dev/null; then
