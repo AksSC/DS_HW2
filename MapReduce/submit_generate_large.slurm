@@ -5,7 +5,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=4G            # Request 4 GB of memory, which should be plenty
-#SBATCH --time=01:00:00     # 1 hour time limit
+#SBATCH --time=02:00:00     # 1 hour time limit
 
 # --- Argument Validation ---
 if [ "$#" -ne 3 ]; then
