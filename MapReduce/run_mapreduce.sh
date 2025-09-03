@@ -48,31 +48,40 @@ do
     cat "$OUTPUT_DIR/tmp/map_out_"*.txt > "$OUTPUT_DIR/tmp/combined_map_out.txt"
     
     # Sort the combined output (Shuffle & Sort) and pipe to the reducer
-    sort -k1,1n "$OUTPUT_DIR/tmp/combined_map_out.txt" | python3 reducer.py > "$NEW_CENTROIDS"
+    sort -k1,1n "$OUTPUT_DIR/tmp/combined_map_out.txt" | python3 reducer.py "$PREV_CENTROIDS" > "$NEW_CENTROIDS"
 
     # --- Convergence Check ---
     if diff -q "$PREV_CENTROIDS" "$NEW_CENTROIDS" > /dev/null; then
         echo "Convergence reached at iteration $i."
-        CONVERGED=1
+        # Final assignment generation for converged state
+        FINAL_CENTROIDS_PATH=$NEW_CENTROIDS
+        srun --ntasks=$NUM_MAPPERS bash -c '
+            TASK_ID=$(printf "%02d" $SLURM_PROCID)
+            INPUT_CHUNK="$1/tmp/chunk_${TASK_ID}.txt"
+            ASSIGNMENT_OUTPUT="$1/assignments_${TASK_ID}.txt"
+            python3 mapper.py "$2" < "$INPUT_CHUNK" > "$ASSIGNMENT_OUTPUT"
+        ' bash "$OUTPUT_DIR" "$FINAL_CENTROIDS_PATH"
+        cat "$OUTPUT_DIR/assignments_"*.txt > "$OUTPUT_DIR/assignments.txt"
+        cp "$FINAL_CENTROIDS_PATH" "$OUTPUT_DIR/centroids_final.txt"
+        rm "$OUTPUT_DIR/assignments_"*.txt
         break
+    fi
+
+    # Handle final output if max iterations is reached
+    if [ "$i" -eq "$MAX_ITER" ]; then
+        echo "Reached max iterations ($MAX_ITER) without convergence."
+        FINAL_CENTROIDS_PATH=$NEW_CENTROIDS
+        srun --ntasks=$NUM_MAPPERS bash -c '
+            TASK_ID=$(printf "%02d" $SLURM_PROCID)
+            INPUT_CHUNK="$1/tmp/chunk_${TASK_ID}.txt"
+            ASSIGNMENT_OUTPUT="$1/assignments_${TASK_ID}.txt"
+            python3 mapper.py "$2" < "$INPUT_CHUNK" > "$ASSIGNMENT_OUTPUT"
+        ' bash "$OUTPUT_DIR" "$FINAL_CENTROIDS_PATH"
+        cat "$OUTPUT_DIR/assignments_"*.txt > "$OUTPUT_DIR/assignments.txt"
+        cp "$FINAL_CENTROIDS_PATH" "$OUTPUT_DIR/centroids_final.txt"
+        rm "$OUTPUT_DIR/assignments_"*.txt
     fi
 done
 
-if [ -z "$CONVERGED" ]; then
-    echo "Reached max iterations ($MAX_ITER) without convergence."
-fi
-
-# --- Final Output Generation ---
-# The final centroids are the ones from the last successful iteration.
-FINAL_CENTROIDS="$OUTPUT_DIR/centroids_$i.txt"
-cp "$FINAL_CENTROIDS" "$OUTPUT_DIR/centroids_final.txt"
-echo "Final centroids written to $OUTPUT_DIR/centroids_final.txt"
-
-# Create the final point-to-cluster assignment file [cite: 128]
-echo "Generating final cluster assignments..."
-ASSIGNMENT_FILE="$OUTPUT_DIR/assignments.txt"
-cat $POINTS_FILE | python3 mapper.py $FINAL_CENTROIDS > $ASSIGNMENT_FILE
-
-echo "K-Means finished. Final assignment is in $ASSIGNMENT_FILE"
-
+echo "K-Means finished. Final assignment is in $OUTPUT_DIR/assignments.txt"
 rm -rf "$OUTPUT_DIR/tmp"

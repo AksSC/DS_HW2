@@ -27,7 +27,6 @@ if [ ! -d "data" ]; then
     exit 1
 fi
 
-# Can further remove this from here, just do sbatch outside and then once generation is done, run this script, to avoid waiting like this tch tch
 # --- Step 1: Generate the Benchmark Dataset (only once) ---
 # echo "--- Submitting Data Generation Job ---"
 # # We wait for this job to complete before starting the tests.
