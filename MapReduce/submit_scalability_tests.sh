@@ -1,16 +1,21 @@
 #!/bin/bash
 set -e # Exit immediately if a command exits with a non-zero status.
 
+if [ "$#" -ne 2 ]; then
+    echo "Usage: ./submit_scalability_tests.sh K max_iter"
+    exit 1
+fi
+
 # --- Configuration ---
 # The list of core counts you want to test.
 CORE_COUNTS=(1 2 4 8 16 24 32 48 64 96)
 
 chmod +x submit_generate.slurm submit_kmeans.slurm submit_verify.slurm
-chmod +x generate_script.py run_mapreduce.sh mapper.py reducer.py verify_script.py
+chmod +x run_mapreduce.sh mapper.py reducer.py verify_script.py
 
 # Parameters for the single, large dataset we will use for all tests.
-K=50
-MAX_ITER=200
+K=$1
+MAX_ITER=$2
 
 # Output file for raw timing data.
 JOB_IDS_FILE="job_ids.csv"
