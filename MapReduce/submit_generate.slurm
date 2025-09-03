@@ -14,6 +14,8 @@ if [ "$#" -ne 4 ]; then
     exit 1
 fi
 
+chmod +x generate_script.py
+
 echo "--- Starting K-Means Data Generation ---"
 echo "Number of Points: $1"
 echo "Number of Dimensions: $2"
