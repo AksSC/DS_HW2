@@ -104,7 +104,6 @@ def main():
     initial_centers = points[initial_center_indices]
     
     # --- 2. Write Input Files for MapReduce ---
-    print(f"\nWriting input files...")
     write_to_csv(POINTS_FILE, points)
     print(f"-> Successfully created '{POINTS_FILE}'")
     write_to_csv(INITIAL_CENTERS_FILE, initial_centers)
@@ -126,8 +125,6 @@ def main():
             point_str = ",".join(map(str, point))
             f.write(f"{cluster_id}\t{point_str}\n")
     print(f"-> Successfully created '{EXPECTED_ASSIGNMENTS_FILE}'")
-    
-    print("\nAll done! You can now use the generated CSV files to test your MapReduce implementation.")
 
 if __name__ == "__main__":
     main()

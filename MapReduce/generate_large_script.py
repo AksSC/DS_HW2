@@ -20,10 +20,7 @@ def generate_and_write_points(n_points, n_dim, k, std_dev, true_centers):
     """
     with open(POINTS_FILE, 'w', newline='') as f:
         writer = csv.writer(f)
-        for i in range(n_points):
-            if (i + 1) % 100000 == 0:
-                print(f"  -> Generated {i+1}/{n_points} points...")
-            
+        for i in range(n_points):            
             # Pick a random true center
             center = random.choice(true_centers)
             # Create a point using a normal distribution around the center
@@ -50,8 +47,6 @@ def main():
     NUM_POINTS = int(sys.argv[1])
     NUM_DIMENSIONS = int(sys.argv[2])
     K = int(sys.argv[3])
-
-    print(f"Generating a large dataset with {NUM_POINTS} points...")
     
     # --- 1. Generate True Centers and Initial Centers ---
     # We still need the "true" centers around which to generate data.
@@ -66,11 +61,9 @@ def main():
     print(f"-> Successfully created '{INITIAL_CENTERS_FILE}'")
 
     # --- 3. Generate and Stream Points File ---
-    print(f"-> Starting to stream points to '{POINTS_FILE}'...")
     generate_and_write_points(NUM_POINTS, NUM_DIMENSIONS, K, CLUSTER_STD_DEV, true_centers)
     
-    print("\nLarge data generation complete!")
-    print(f"You can now run your MapReduce job on the files in the 'data/' directory.")
+    print(f"{NUM_POINTS} points generated!")
 
 if __name__ == "__main__":
     main()

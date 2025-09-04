@@ -35,4 +35,6 @@ done
 
 echo "------------------------------------------"
 echo "Result collection complete."
-echo "Final timing data saved to '$RESULTS_FILE'."    
+echo "Final timing data saved to '$RESULTS_FILE'."
+
+rm -f "$JOB_IDS_FILE"

@@ -28,7 +28,7 @@ split -n l/$NUM_MAPPERS -d --additional-suffix=.txt "$POINTS_FILE" "$OUTPUT_DIR/
 # --- Main Iteration Loop ---
 for i in $(seq 1 $MAX_ITER)
 do
-    echo "--- Iteration $i ---"
+    # echo "--- Iteration $i ---"
     PREV_CENTROIDS="$OUTPUT_DIR/centroids_$(($i-1)).txt"
     NEW_CENTROIDS="$OUTPUT_DIR/centroids_$i.txt"
     
@@ -44,7 +44,10 @@ do
     # --- Aggregate, Sort, and Reduce Step ---
     # Consolidate all mapper outputs
     cat "$OUTPUT_DIR/tmp/combined_out_"*.txt > "$OUTPUT_DIR/tmp/global_combined_out.txt"
+    rm "$OUTPUT_DIR/tmp/combined_out_"*.txt
+    
     sort -k1,1n "$OUTPUT_DIR/tmp/global_combined_out.txt" | python3 reducer.py "$PREV_CENTROIDS" > "$NEW_CENTROIDS"
+    rm "$OUTPUT_DIR/tmp/global_combined_out.txt"
 
     # --- Convergence Check ---
     if diff -q "$PREV_CENTROIDS" "$NEW_CENTROIDS" > /dev/null; then
