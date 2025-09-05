@@ -53,6 +53,7 @@ for cores in "${CORE_COUNTS[@]}"; do
     
     echo "   KMeans Job ID: $JOB_ID"
 
+    # Uncomment if small data and want verification step too!
     # VERIFY_JOB_ID=$(sbatch --parsable --dependency=afterok:"$JOB_ID" submit_verify.slurm "$OUTPUT_DIR")
     # echo "   Verification Job ID: $VERIFY_JOB_ID (depends on $JOB_ID)"
 

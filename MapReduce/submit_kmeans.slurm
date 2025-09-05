@@ -5,7 +5,7 @@
 #SBATCH --ntasks=24          # number of mappers as well - need to change and try things for scalability tests
 #SBATCH --cpus-per-task=1   
 #SBATCH --mem=8G
-#SBATCH --time=03:00:00     # 180-minute time limit (might be required for the 1 mapper??)
+#SBATCH --time=10:00:00     # 180-minute time limit (might be required for the 1 mapper??)
 
 # --- Load any necessary modules (if required on your cluster) ---
 # module load python/3.8
